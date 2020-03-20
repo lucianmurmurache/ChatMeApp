@@ -104,6 +104,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#757083',
     },
     //Color options
+    colorOptions: {
+        flex: 4,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+    },
+    colorButtons: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+    },
     colorOption1: {
         backgroundColor: '#090C08',
     },
