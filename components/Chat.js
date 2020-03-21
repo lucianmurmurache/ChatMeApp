@@ -1,31 +1,36 @@
 import React, { Component } from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
+import { View, Text, StyleSheet, } from 'react-native';
 
 export default class Chat extends React.Component {
     constructor() {
         super();
 
         this.state = {
-            user: ''
+            name: '',
+            color: '',
         }
     }
 
-    // Place user's name in navigation
-    // Don't know how to do that yet
-
-
+    //Set title as username
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: navigation.state.params.name
+        }
+    }
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={[
+                styles.container, {
+                    backgroundColor: this.props.navigation.state.params.color
+                }
+            ]}
+            >
                 <Text>Chat page..</Text>
             </View>
         )
     }
-
-
-
 }
 
 const styles = StyleSheet.create({
@@ -37,4 +42,4 @@ const styles = StyleSheet.create({
         backgroundColor: '#000',
         justifyContent: 'center',
     },
-})
+});
