@@ -35,9 +35,9 @@ export default class Chat extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
+        fontSize: 16,
         width: '100%',
         color: '#fff',
-        fontSize: '16',
         alignItems: 'center',
         backgroundColor: '#000',
         justifyContent: 'center',
