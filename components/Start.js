@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
         fontWeight: '300',
     },
     appTitle: {
+        fontSize: 45,
         color: '#fff',
-        fontSize: '45',
         fontWeight: '600',
         textAlign: 'center',
     },
