@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "expo": "~36.0.0",
-    "minimist": "^1.2.5",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -21,8 +20,10 @@
     "react-navigation-stack": "^2.3.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
     "babel-preset-expo": "~8.0.0",
-    "@babel/core": "^7.0.0"
+    "mem": "^6.0.1",
+    "minimist": "^1.2.5"
   },
   "private": true
 }
