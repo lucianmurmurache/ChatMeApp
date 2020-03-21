@@ -7,7 +7,7 @@ import {
     TextInput,
     StyleSheet,
     ImageBackground,
-    TouchableHighlight
+    TouchableOpacity,
 } from 'react-native';
 
 export default class Start extends React.Component {
@@ -43,22 +43,22 @@ export default class Start extends React.Component {
                         Choose Background Color:
                     </Text>
                     <View style={styles.colorOptions}>
-                        <TouchableHighlight
+                        <TouchableOpacity
                             onPress={() => this.setState({ color: '#090C08' })}
                             style={[styles.colorButtons, styles.colorOption1]}
                         />
 
-                        <TouchableHighlight
+                        <TouchableOpacity
                             onPress={() => this.setState({ color: '#474056' })}
                             style={[styles.colorButtons, styles.colorOption2]}
                         />
 
-                        <TouchableHighlight
+                        <TouchableOpacity
                             onPress={() => this.setState({ color: '#8A95A5' })}
                             style={[styles.colorButtons, styles.colorOption3]}
                         />
 
-                        <TouchableHighlight
+                        <TouchableOpacity
                             onPress={() => this.setState({ color: '#B9C6AE' })}
                             style={[styles.colorButtons, styles.colorOption4]}
                         />
