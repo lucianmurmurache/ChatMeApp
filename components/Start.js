@@ -1,24 +1,36 @@
 import React, { Component } from 'react';
 
-import { StyleSheet, Button, View, Text, TextInput, ImageBackground } from 'react-native';
+import {
+    View,
+    Text,
+    Button,
+    TextInput,
+    StyleSheet,
+    ImageBackground,
+    TouchableHighlight
+} from 'react-native';
 
 export default class Start extends React.Component {
     constructor() {
         super();
 
         this.state = {
-            name: ''
+            name: '',
+            color: ''
         }
     }
 
-
-
-
     render() {
         return (
-            <ImageBackground source={require('../assets/BackgroundImage.png')}>
+            <ImageBackground
+                source={require('../assets/BackgroundImage.png')}
+                style={styles.backgroundImage}
+            >
                 <Text style={styles.appTitle}>ChatMeApp</Text>
+
                 <View style={styles.container}>
+
+                    {/*Name input section*/}
                     <TextInput
                         value={this.state.name}
                         placeholder='Your name..'
@@ -26,39 +38,51 @@ export default class Start extends React.Component {
                         onChangeText={(name) => this.setState({ name })}
                     />
 
+                    {/*Chat background color selector*/}
                     <Text style={styles.text}>
                         Choose Background Color:
                     </Text>
+                    <View style={styles.colorOptions}>
+                        <TouchableHighlight
+                            onPress={() => this.setState({ color: '#090C08' })}
+                            style={[styles.colorButtons, styles.colorOption1]}
+                        />
 
-                    {/* 
-                    
-                    Background color options
+                        <TouchableHighlight
+                            onPress={() => this.setState({ color: '#474056' })}
+                            style={[styles.colorButtons, styles.colorOption2]}
+                        />
 
-                    colorOption1
+                        <TouchableHighlight
+                            onPress={() => this.setState({ color: '#8A95A5' })}
+                            style={[styles.colorButtons, styles.colorOption3]}
+                        />
 
-                    colorOption2
-
-                    colorOption3
-
-                    colorOption4
-
-                    */}
+                        <TouchableHighlight
+                            onPress={() => this.setState({ color: '#B9C6AE' })}
+                            style={[styles.colorButtons, styles.colorOption4]}
+                        />
+                    </View>
 
                     <Button
                         style={styles.button}
                         title='Start Chatting'
-                        onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, color: this.state.color })}
+                        onPress={() =>
+                            this.props.navigation.navigate('Chat',
+                                {
+                                    name: this.state.name,
+                                    color: this.state.color
+                                }
+                            )}
                     />
 
                 </View>
             </ImageBackground>
-        )
+        );
     }
-
-
-
 }
 
+/*==========Styling==========*/
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -103,7 +127,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         backgroundColor: '#757083',
     },
-    //Color options
+    /*==========ColorOptions==========*/
     colorOptions: {
         flex: 4,
         flexDirection: 'row',
@@ -127,4 +151,4 @@ const styles = StyleSheet.create({
     colorOption4: {
         backgroundColor: '#B9C6AE',
     }
-})
+});
