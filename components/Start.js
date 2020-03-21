@@ -16,7 +16,6 @@ export default class Start extends React.Component {
 
         this.state = {
             name: '',
-            color: ''
         }
     }
 
@@ -34,7 +33,7 @@ export default class Start extends React.Component {
                     <TextInput
                         value={this.state.name}
                         placeholder='Your name..'
-                        styles={styles.nameContainer}
+                        style={styles.nameContainer}
                         onChangeText={(name) => this.setState({ name })}
                     />
 
@@ -115,7 +114,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         width: '88%',
         borderWidth: 1,
-        opacity: '50%',
         color: '#757083',
         fontWeight: '600',
         borderColor: '#000',
