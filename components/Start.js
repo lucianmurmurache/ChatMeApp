@@ -1,4 +1,5 @@
 import React from 'react';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import {
     View,
@@ -32,6 +33,8 @@ export default class Start extends React.Component {
 
                     {/*Name input section*/}
                     <TextInput
+                        accessible={true}
+                        accessibilityLabel='Input name'
                         value={this.state.name}
                         placeholder='Your Name'
                         autoCompleteType={'off'}
@@ -72,12 +75,17 @@ export default class Start extends React.Component {
                             }
                         )}
                     >
-                        <View style={styles.chatBtn}>
+                        <View
+                            accessible={true}
+                            accessibilityLabel='Start chatting'
+                            style={styles.chatBtn}
+                        >
                             <Text style={styles.textBtn}>
                                 Start Chatting
                             </Text>
                         </View>
                     </TouchableNativeFeedback>
+                    {Platform.OS === 'android' ? <KeyboardSpacer /> : null}{/*Not working-looking for different solution*/}
                 </View>
             </ImageBackground >
         );
