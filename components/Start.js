@@ -34,6 +34,7 @@ export default class Start extends React.Component {
                     <TextInput
                         value={this.state.name}
                         placeholder='Your Name'
+                        autoCompleteType={'off'}
                         style={styles.nameContainer}
                         onChangeText={(name) => this.setState({ name })}
                     />
@@ -94,18 +95,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignItems: 'center',
         backgroundColor: '#fff',
-        justifyContent: 'center',
     },
     text: {
         fontSize: 16,
         color: '#757083',
         fontWeight: '300',
-    },
-    textBtn: {
-        margin: 30,
-        fontSize: 16,
-        color: '#FFFFFF',
-        fontWeight: '600',
+
     },
     appTitle: {
         flex: 1,
@@ -122,20 +117,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     nameContainer: {
-        height: 50,
+        height: 65,
         opacity: .5,
         fontSize: 16,
         width: '88%',
         marginTop: 20,
         borderWidth: 2,
-        marginBottom: 20,
+        marginBottom: 30,
         color: '#757083',
-        fontWeight: '600',
+        fontWeight: '300',
         textAlign: 'center',
         borderColor: '#757083',
     },
     chatBtn: {
-        height: 50,
+        height: 65,
         width: '88%',
         marginBottom: 20,
         textAlign: 'center',
@@ -143,12 +138,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#757083',
     },
+    textBtn: {
+        margin: 30,
+        fontSize: 16,
+        color: '#FFFFFF',
+        fontWeight: '600',
+    },
     /*==========ColorOptions==========*/
     colorOptions: {
         flex: 2,
         flexDirection: 'row',
         alignItems: 'flex-start',
-        justifyContent: 'space-between',
     },
     colorButtons: {
         width: 40,
