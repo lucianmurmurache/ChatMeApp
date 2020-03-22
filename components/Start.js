@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import {
     View,
     Text,
-    Button,
     TextInput,
     StyleSheet,
     ImageBackground,
     TouchableOpacity,
+    TouchableNativeFeedback
 } from 'react-native';
 
 export default class Start extends React.Component {
@@ -16,14 +16,15 @@ export default class Start extends React.Component {
 
         this.state = {
             name: '',
+            color: ''
         }
     }
 
     render() {
         return (
             <ImageBackground
-                source={require('../assets/BackgroundImage.png')}
                 style={styles.backgroundImage}
+                source={require('../assets/BackgroundImage.png')}
             >
                 <Text style={styles.appTitle}>ChatMeApp</Text>
 
@@ -32,7 +33,7 @@ export default class Start extends React.Component {
                     {/*Name input section*/}
                     <TextInput
                         value={this.state.name}
-                        placeholder='Your name..'
+                        placeholder='Your Name'
                         style={styles.nameContainer}
                         onChangeText={(name) => this.setState({ name })}
                     />
@@ -43,40 +44,41 @@ export default class Start extends React.Component {
                     </Text>
                     <View style={styles.colorOptions}>
                         <TouchableOpacity
-                            onPress={() => this.setState({ color: '#090C08' })}
                             style={[styles.colorButtons, styles.colorOption1]}
+                            onPress={() => this.setState({ color: '#090C08' })}
                         />
 
                         <TouchableOpacity
-                            onPress={() => this.setState({ color: '#474056' })}
                             style={[styles.colorButtons, styles.colorOption2]}
+                            onPress={() => this.setState({ color: '#474056' })}
                         />
 
                         <TouchableOpacity
-                            onPress={() => this.setState({ color: '#8A95A5' })}
                             style={[styles.colorButtons, styles.colorOption3]}
+                            onPress={() => this.setState({ color: '#8A95A5' })}
                         />
 
                         <TouchableOpacity
-                            onPress={() => this.setState({ color: '#B9C6AE' })}
                             style={[styles.colorButtons, styles.colorOption4]}
+                            onPress={() => this.setState({ color: '#B9C6AE' })}
                         />
                     </View>
-
-                    <Button
-                        style={styles.button}
-                        title='Start Chatting'
-                        onPress={() =>
-                            this.props.navigation.navigate('Chat',
-                                {
-                                    name: this.state.name,
-                                    color: this.state.color
-                                }
-                            )}
-                    />
-
+                    <TouchableNativeFeedback
+                        onPress={() => this.props.navigation.navigate('Chat',
+                            {
+                                name: this.state.name,
+                                color: this.state.color
+                            }
+                        )}
+                    >
+                        <View style={styles.chatBtn}>
+                            <Text style={styles.textBtn}>
+                                Start Chatting
+                            </Text>
+                        </View>
+                    </TouchableNativeFeedback>
                 </View>
-            </ImageBackground>
+            </ImageBackground >
         );
     }
 }
@@ -89,8 +91,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         height: '44%',
         color: '#000',
+        marginBottom: 20,
         alignItems: 'center',
-        backgroundColor: '#000',
+        backgroundColor: '#fff',
         justifyContent: 'center',
     },
     text: {
@@ -98,9 +101,17 @@ const styles = StyleSheet.create({
         color: '#757083',
         fontWeight: '300',
     },
+    textBtn: {
+        margin: 30,
+        fontSize: 16,
+        color: '#FFFFFF',
+        fontWeight: '600',
+    },
     appTitle: {
+        flex: 1,
         fontSize: 45,
-        color: '#fff',
+        marginTop: 60,
+        color: '#FFFFFF',
         fontWeight: '600',
         textAlign: 'center',
     },
@@ -111,23 +122,30 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     nameContainer: {
+        height: 50,
+        opacity: .5,
         fontSize: 16,
         width: '88%',
-        borderWidth: 1,
+        marginTop: 20,
+        borderWidth: 2,
+        marginBottom: 20,
         color: '#757083',
         fontWeight: '600',
-        borderColor: '#000',
+        textAlign: 'center',
+        borderColor: '#757083',
     },
-    button: {
-        fontSize: 16,
+    chatBtn: {
+        height: 50,
         width: '88%',
-        color: '#fff',
-        fontWeight: '600',
+        marginBottom: 20,
+        textAlign: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#757083',
     },
     /*==========ColorOptions==========*/
     colorOptions: {
-        flex: 4,
+        flex: 2,
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'space-between',
@@ -135,6 +153,7 @@ const styles = StyleSheet.create({
     colorButtons: {
         width: 40,
         height: 40,
+        margin: 10,
         borderRadius: 20,
     },
     colorOption1: {
