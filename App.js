@@ -1,6 +1,3 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
 //Import screens
 import Chat from './components/Chat';
 import Start from './components/Start';
@@ -9,10 +6,11 @@ import Start from './components/Start';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
+//hide navigation bar on Start screen
 const navigator = createStackNavigator({
   Start: {
-    screen: Start, navigationOptions: { //hide navigation bar on Start screen
-      header: null,
+    screen: Start, navigationOptions: {
+      headerShown: false,
     },
   },
   Chat: { screen: Chat }
