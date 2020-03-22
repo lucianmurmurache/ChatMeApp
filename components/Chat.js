@@ -1,15 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { View, Text, StyleSheet, } from 'react-native';
 
 export default class Chat extends React.Component {
     constructor() {
         super();
-
-        this.state = {
-            name: '',
-            color: '',
-        }
     }
 
     //Set title as username
@@ -21,13 +16,8 @@ export default class Chat extends React.Component {
 
     render() {
         return (
-            <View style={[
-                styles.container, {
-                    backgroundColor: this.props.navigation.state.params.color
-                }
-            ]}
-            >
-                <Text>Chat page..</Text>
+            <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.color }]}>
+                <Text style={styles.text}>Chat page...</Text>
             </View>
         )
     }
@@ -35,11 +25,14 @@ export default class Chat extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        fontSize: 16,
         width: '100%',
-        color: '#fff',
+        height: '100%',
         alignItems: 'center',
-        backgroundColor: '#000',
+        backgroundColor: '#FFFFFF',
         justifyContent: 'center',
     },
+    text: {
+        fontSize: 16,
+        color: '#FFFFFF',
+    }
 });
