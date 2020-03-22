@@ -25,12 +25,12 @@ To run the app on your device, you can download and install the expo app from th
 For information on how to set up an emulator for testing, you can visit the _documentation_ [page](https://docs.expo.io/versions/latest/workflow/android-studio-emulator/). 
 
 ## Design Specifications
- Vertical and horizontal spacing: evenly distributed
- App title: font size 45, font weight 600, font color #FFFFFF
- “Your name”: font size 16, font weight 300, font color #757083, 50% opacity
- “Choose background color”: font size 16, font weight 300, font color #757083, 100% opacity
- Color options HEX codes: #090C08; #474056; #8A95A5; #B9C6AE
- Start chatting button: font size 16, font weight 600, font color #FFFFFF, button color#757083
+ 1. Vertical and horizontal spacing evenly distributed
+ 2. App title: font size 45, font weight 600, font color #FFFFFF
+ 3. “Your name”: font size 16, font weight 300, font color #757083, 50% opacity
+ 4. “Choose background color”: font size 16, font weight 300, font color #757083, 100% opacity
+ 5. Color options HEX codes: #090C08; #474056; #8A95A5; #B9C6AE
+ 6. Start chatting button: font size 16, font weight 600, font color #FFFFFF, button color#757083
 
  ## Technical Requirements
  1. The app must be written in React Native.
