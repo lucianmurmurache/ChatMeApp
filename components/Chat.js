@@ -14,7 +14,7 @@ export default class Chat extends React.Component {
         },
     };
 
-    //Set title as username
+    //Set navigation title as username instead of "Chat"
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.state.params.name
@@ -72,7 +72,7 @@ export default class Chat extends React.Component {
         })
     }
 
-    // Send message
+    // Send message function
     onSend = (messages = []) => {
         this.setState(previousState => {
             const sentMessages = [{ ...messages[0], sent: true }]
@@ -104,7 +104,7 @@ export default class Chat extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1, // Sets the width and height of the device
         color: '#FFFFFF',
         backgroundColor: '#000000',
     },
