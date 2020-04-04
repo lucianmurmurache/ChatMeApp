@@ -4,21 +4,157 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import { View, StyleSheet, Platform } from 'react-native';
 
-export default class Chat extends React.Component {
-    state = {
-        messages: [],
-        user: {
-            _id: '',
-            name: '',
-            avatar: ''
-        },
-    };
+import firebase from 'firebase';
+import 'firebase/firestore';
 
-    //Set navigation title as username instead of "Chat"
+export default class Chat extends React.Component {
+
+    constructor() {
+        super();
+
+        this.state = {
+            messages: [],
+            user: {
+                _id: '',
+                name: '',
+                avatar: '',
+            },
+            uid: 0,
+        };
+
+        // Firebase init
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+                apiKey: 'AIzaSyBq-QCkcxewGL-E4bI6dFqeJ70qEqc9hxM',
+                authDomain: 'chatmeapp-a125c.firebaseapp.com',
+                databaseURL: 'https://chatmeapp-a125c.firebaseio.com',
+                projectId: 'chatmeapp-a125c',
+                storageBucket: 'chatmeapp-a125c.appspot.com',
+                messagingSenderId: '866722767157',
+                appId: '1:866722767157:web:e0bd107d743ce1fc11ac7c',
+                measurementId: 'G-SYTPBJSG2D'
+            })
+        }
+
+        this.referenceMessages = firebase.firestore().collection('messages');
+    }
+
+    // Set navigation title as username
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.state.params.name
         }
+    }
+
+    setUser = (_id, name = 'anonymous') => {
+        this.setState({
+            user: {
+                _id: _id,
+                name: name,
+                avatar: 'https://placeimg.com/140/140/any'
+            }
+        });
+    }
+
+    //Get user data
+    get user() {
+        return {
+            name: this.props.navigation.state.params.name,
+            _id: this.state.uid,
+            id: this.state.uid,
+        }
+    }
+
+    onCollectionUpdate = (querySnapshot) => {
+        const messages = [];
+        // Go through each document
+        querySnapshot.forEach(doc => {
+            // Get queryDocumentSnapshot's data
+            var data = doc.data();
+            messages.push({
+                _id: data._id,
+                text: data.text,
+                createdAt: data.Date,
+                user: data.user
+            });
+        });
+        this.setState({
+            messages
+        });
+    };
+
+    // Add message
+    addMessage() {
+        this.referenceMessages.add({
+            _id: this.state.messages[0]._id,
+            text: this.state.messages[0].text || '',
+            createdAt: this.state.messages[0].createdAt,
+            user: this.state.messages[0].user,
+            uid: this.state.uid,
+        });
+    }
+
+    // Send message
+    onSend = (messages = []) => {
+        this.setState(previousState => {
+            const sentMessages = [
+                { ...messages[0], sent: true }
+            ]
+            return {
+                messages: GiftedChat.append(
+                    previousState.messages,
+                    sentMessages,
+                ),
+            }
+        })
+    }
+
+    // Display elements
+    componentDidMount() {
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
+            if (!user) {
+                await firebase.auth().signInAnonymously();
+            }
+
+            if (this.props.navigation.state.params.name) {
+                this.setUser(user.uid, this.props.navigation.state.params.name);
+            } else {
+                this.setUser({
+                    uid: user.uid,
+                    loggedInText: 'Hello there',
+                });
+            }
+
+            this.unsubscribe = this.referenceMessages.onSnapshot(this.onCollectionUpdate);
+        });
+        // Set state with a static message
+        this.setState({
+            messages: [
+                {
+                    _id: 1,
+                    text: 'Hello developer',
+                    createdAt: new Date(),
+                    user: {
+                        _id: 2,
+                        name: 'React Native',
+                        avatar: 'https://placeimg.com/140/140/any',
+                    },
+                },
+                {
+                    _id: 2,
+                    text: this.props.navigation.state.params.name + ' has entered the chat',
+                    createdAt: new Date(),
+                    system: true,
+                },
+            ],
+        })
+    }
+
+    componentWillUnmount() {
+        // Stop listening for authentication
+        this.authUnsubscribe();
+        // Stop listening for changes
+        this.unsubscribe();
     }
 
     // Change bubble color
@@ -48,43 +184,6 @@ export default class Chat extends React.Component {
         )
     }
 
-    // Set state with a static message
-    componentDidMount() {
-        this.setState({
-            messages: [
-                {
-                    _id: 1,
-                    text: 'Hello there!',
-                    createdAt: new Date(),
-                    user: {
-                        _id: 2,
-                        name: 'React Native',
-                        avatar: 'https://placeimg.com/140/140/any',
-                    },
-                },
-                {
-                    _id: 2,
-                    text: 'This is a system message',
-                    createdAt: new Date(),
-                    system: true,
-                },
-            ],
-        })
-    }
-
-    // Send message function
-    onSend = (messages = []) => {
-        this.setState(previousState => {
-            const sentMessages = [{ ...messages[0], sent: true }]
-            return {
-                messages: GiftedChat.append(
-                    previousState.messages,
-                    sentMessages,
-                ),
-            }
-        })
-    }
-
     render() {
         return (
             <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.color }]}>
@@ -92,11 +191,9 @@ export default class Chat extends React.Component {
                     messages={this.state.messages}
                     onSend={messages => this.onSend(messages)}
                     renderBubble={this.renderBubble.bind(this)}
-                    user={{
-                        _id: 1,
-                    }}
+                    user={this.state.user}
                 />
-                {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
+                {Platform.OS === 'android' ? <KeyboardSpacer topSpacing={50} /> : null}
             </View>
         )
     }
@@ -109,3 +206,30 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000',
     },
 });
+
+{/*
+    ===============
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src='https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js'></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src='https://www.gstatic.com/firebasejs/7.13.2/firebase-analytics.js'></script>
+
+    <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: 'AIzaSyBq-QCkcxewGL-E4bI6dFqeJ70qEqc9hxM',
+      authDomain: 'chatmeapp-a125c.firebaseapp.com',
+      databaseURL: 'https://chatmeapp-a125c.firebaseio.com',
+      projectId: 'chatmeapp-a125c',
+      storageBucket: 'chatmeapp-a125c.appspot.com',
+      messagingSenderId: '866722767157',
+      appId: '1:866722767157:web:e0bd107d743ce1fc11ac7c',
+      measurementId: 'G-SYTPBJSG2D'
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    </script>
+*/}
