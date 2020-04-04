@@ -12,6 +12,17 @@ export default class Chat extends React.Component {
     constructor() {
         super();
 
+        this.state = {
+            messages: [],
+            user: {
+                _id: '',
+                name: '',
+                avatar: '',
+            },
+            uid: 0,
+        };
+
+        // Firebase init
         if (!firebase.apps.length) {
             firebase.initializeApp({
                 apiKey: 'AIzaSyBq-QCkcxewGL-E4bI6dFqeJ70qEqc9hxM',
@@ -25,24 +36,27 @@ export default class Chat extends React.Component {
             })
         }
 
-        this.referenceMessageUser = null;
-        this.referenceMessages = firebase.firestore().collection('messages')
-
-        this.state = {
-            messages: [],
-            uid: 0,
-            loggedInText: 'Processing authentication, please wait!',
-        };
+        this.referenceMessages = firebase.firestore().collection('messages');
     }
 
-    //Set navigation title as username
+    // Set navigation title as username
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.state.params.name
         }
     }
 
-    //Get user name and id
+    setUser = (_id, name = 'anonymous') => {
+        this.setState({
+            user: {
+                _id: _id,
+                name: name,
+                avatar: 'https://placeimg.com/140/140/any'
+            }
+        });
+    }
+
+    //Get user data
     get user() {
         return {
             name: this.props.navigation.state.params.name,
@@ -60,7 +74,7 @@ export default class Chat extends React.Component {
             messages.push({
                 _id: data._id,
                 text: data.text,
-                createdAt: data.createdAt.toDate(),
+                createdAt: data.Date,
                 user: data.user
             });
         });
@@ -69,53 +83,70 @@ export default class Chat extends React.Component {
         });
     };
 
+    // Add message
     addMessage() {
-        console.log(this.state.messages[0])
         this.referenceMessages.add({
             _id: this.state.messages[0]._id,
             text: this.state.messages[0].text || '',
             createdAt: this.state.messages[0].createdAt,
-            user: [this.state.uid, this.props.navigation.state.params.name, ''],
+            user: this.state.messages[0].user,
             uid: this.state.uid,
         });
     }
 
-    onSend(messages = []) {
-        this.setState(
-            previousState => ({
-                messages: GiftedChat.append(previousState.messages, messages)
-            }),
-            () => {
-                this.addMessage();
+    // Send message
+    onSend = (messages = []) => {
+        this.setState(previousState => {
+            const sentMessages = [
+                { ...messages[0], sent: true }
+            ]
+            return {
+                messages: GiftedChat.append(
+                    previousState.messages,
+                    sentMessages,
+                ),
             }
-        );
+        })
     }
 
+    // Display elements
     componentDidMount() {
-        // Listen for authentication events
         this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
             if (!user) {
                 await firebase.auth().signInAnonymously();
             }
-            // Update user state with current user data
-            this.setState({
-                uid: user.uid,
-                loggedInText: 'Hello there!'
-            });
-            // Create reference to the active user's data
-            this.referenceMessageUser = firebase.firestore().collection('messages');
-            // Listen for collection changes to current user
-            this.unsubscribeMessageUser = this.referenceMessageUser.onSnapshot(this.onCollectionUpdate);
+
+            if (this.props.navigation.state.params.name) {
+                this.setUser(user.uid, this.props.navigation.state.params.name);
+            } else {
+                this.setUser({
+                    uid: user.uid,
+                    loggedInText: 'Hello there',
+                });
+            }
+
+            this.unsubscribe = this.referenceMessages.onSnapshot(this.onCollectionUpdate);
         });
+        // Set state with a static message
         this.setState({
             messages: [
                 {
+                    _id: 1,
+                    text: 'Hello developer',
+                    createdAt: new Date(),
+                    user: {
+                        _id: 2,
+                        name: 'React Native',
+                        avatar: 'https://placeimg.com/140/140/any',
+                    },
+                },
+                {
                     _id: 2,
-                    text: this.props.navigation.state.params.name + ' has entered the chat!',
+                    text: this.props.navigation.state.params.name + ' has entered the chat',
                     createdAt: new Date(),
                     system: true,
-                }
-            ]
+                },
+            ],
         })
     }
 
@@ -123,7 +154,7 @@ export default class Chat extends React.Component {
         // Stop listening for authentication
         this.authUnsubscribe();
         // Stop listening for changes
-        this.unsubscribeMessageUser();
+        this.unsubscribe();
     }
 
     // Change bubble color
@@ -160,11 +191,9 @@ export default class Chat extends React.Component {
                     messages={this.state.messages}
                     onSend={messages => this.onSend(messages)}
                     renderBubble={this.renderBubble.bind(this)}
-                    user={{
-                        _id: 1,
-                    }}
+                    user={this.state.user}
                 />
-                {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
+                {Platform.OS === 'android' ? <KeyboardSpacer topSpacing={50} /> : null}
             </View>
         )
     }
