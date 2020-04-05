@@ -1,14 +1,14 @@
 import React from 'react';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-
 import { View, StyleSheet, Platform } from 'react-native';
+
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+
 
 import firebase from 'firebase';
 import 'firebase/firestore';
 
 export default class Chat extends React.Component {
-
     constructor() {
         super();
 
@@ -35,7 +35,6 @@ export default class Chat extends React.Component {
                 measurementId: 'G-SYTPBJSG2D'
             })
         }
-
         this.referenceMessages = firebase.firestore().collection('messages');
     }
 
@@ -193,9 +192,9 @@ export default class Chat extends React.Component {
                     renderBubble={this.renderBubble.bind(this)}
                     user={this.state.user}
                 />
-                {Platform.OS === 'android' ? <KeyboardSpacer topSpacing={50} /> : null}
+                {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
             </View>
-        )
+        );
     }
 }
 
@@ -208,28 +207,12 @@ const styles = StyleSheet.create({
 });
 
 {/*
-    ===============
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src='https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js'></script>
 
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-        https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src='https://www.gstatic.com/firebasejs/7.13.2/firebase-analytics.js'></script>
+    *Ongoing issue:
+    *
+    * The app loads, enter name, select colour, enter chat successful, 
+    * L134 message appears briefly, then the Firebase messages load,
+    * Unable to type, the keyboard appears and disappears immediately,
+    * Still looking for fix.
 
-    <script>
-    // Your web app's Firebase configuration
-    var firebaseConfig = {
-      apiKey: 'AIzaSyBq-QCkcxewGL-E4bI6dFqeJ70qEqc9hxM',
-      authDomain: 'chatmeapp-a125c.firebaseapp.com',
-      databaseURL: 'https://chatmeapp-a125c.firebaseio.com',
-      projectId: 'chatmeapp-a125c',
-      storageBucket: 'chatmeapp-a125c.appspot.com',
-      messagingSenderId: '866722767157',
-      appId: '1:866722767157:web:e0bd107d743ce1fc11ac7c',
-      measurementId: 'G-SYTPBJSG2D'
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
-    </script>
 */}
