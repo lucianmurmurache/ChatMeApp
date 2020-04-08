@@ -45,13 +45,14 @@ export default class Chat extends React.Component {
         }
     }
 
+    // Set user ID, name and avatar 
     setUser = (_id, name = 'anonymous') => {
         this.setState({
             user: {
                 _id: _id,
                 name: name,
                 avatar: 'https://placeimg.com/140/140/any'
-            }
+            },
         });
     }
 
@@ -72,9 +73,9 @@ export default class Chat extends React.Component {
             var data = doc.data();
             messages.push({
                 _id: data._id,
-                text: data.text,
-                createdAt: data.Date,
-                user: data.user
+                text: data.text || '',
+                createdAt: data.createdAt.toDate(),
+                user: data.user,
             });
         });
         this.setState({
@@ -89,7 +90,6 @@ export default class Chat extends React.Component {
             text: this.state.messages[0].text || '',
             createdAt: this.state.messages[0].createdAt,
             user: this.state.messages[0].user,
-            uid: this.state.uid,
         });
     }
 
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
 
 {/*
 
-    *Ongoing issue:
+    * Ongoing issue:
     *
     * The app loads, enter name, select colour, enter chat successful, 
     * L134 message appears briefly, then the Firebase messages load,
