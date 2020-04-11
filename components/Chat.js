@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Platform, AsyncStorage } from 'react-native';
 
-//import KeyboardSpacer from 'react-native-keyboard-spacer';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -202,7 +202,7 @@ export default class Chat extends Component {
                     renderBubble={this.renderBubble.bind(this)}
                     user={this.state.user}
                 />
-                {/*Platform.OS === 'android' ? <KeyboardSpacer /> : null*/}
+                {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
             </View>
         );
     }
