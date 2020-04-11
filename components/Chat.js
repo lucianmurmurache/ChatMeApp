@@ -19,7 +19,6 @@ export default class Chat extends React.Component {
                 name: '',
                 avatar: '',
             },
-            uid: 0,
         };
 
         // Firebase init
@@ -51,18 +50,10 @@ export default class Chat extends React.Component {
             user: {
                 _id: _id,
                 name: name,
-                avatar: 'https://placeimg.com/140/140/any'
+                avatar: 'https://placeimg.com/140/140/any',
+                loggedInText: '',
             },
         });
-    }
-
-    //Get user data
-    get user() {
-        return {
-            name: this.props.navigation.state.params.name,
-            _id: this.state.uid,
-            id: this.state.uid,
-        }
     }
 
     onCollectionUpdate = (querySnapshot) => {
@@ -84,28 +75,22 @@ export default class Chat extends React.Component {
     };
 
     // Add message
-    addMessage() {
+    addMessage(message) {
         this.referenceMessages.add({
-            _id: this.state.messages[0]._id,
-            text: this.state.messages[0].text || '',
-            createdAt: this.state.messages[0].createdAt,
-            user: this.state.messages[0].user,
+            _id: message._id,
+            text: message.text || '',
+            createdAt: message.createdAt,
+            user: message.user,
         });
     }
 
     // Send message
     onSend = (messages = []) => {
-        this.setState(previousState => {
-            const sentMessages = [
-                { ...messages[0], sent: true }
-            ]
-            return {
-                messages: GiftedChat.append(
-                    previousState.messages,
-                    sentMessages,
-                ),
-            }
-        })
+        this.setState(previousState => ({
+            messages: GiftedChat.append(previousState.messages, messages),
+        }), () => {
+            this.addMessage();
+        });
     }
 
     // Display elements
@@ -116,29 +101,19 @@ export default class Chat extends React.Component {
             }
 
             if (this.props.navigation.state.params.name) {
-                this.setUser(user.uid, this.props.navigation.state.params.name);
+                this.setUser(user._id, this.props.navigation.state.params.name);
             } else {
                 this.setUser({
-                    uid: user.uid,
+                    _id: user._id,
                     loggedInText: 'Hello there',
                 });
             }
-
-            this.unsubscribe = this.referenceMessages.onSnapshot(this.onCollectionUpdate);
         });
+        this.unsubscribe = this.referenceMessages.onSnapshot(this.onCollectionUpdate);
+
         // Set state with a static message
         this.setState({
             messages: [
-                {
-                    _id: 1,
-                    text: 'Hello developer',
-                    createdAt: new Date(),
-                    user: {
-                        _id: 2,
-                        name: 'React Native',
-                        avatar: 'https://placeimg.com/140/140/any',
-                    },
-                },
                 {
                     _id: 2,
                     text: this.props.navigation.state.params.name + ' has entered the chat',
@@ -158,14 +133,7 @@ export default class Chat extends React.Component {
 
     // Change bubble color
     renderBubble(props) {
-        {/* Quick choices:
-           * #0E3B43 // Warm Black
-           * #357266 // Myrtle Green
-           * #A3BBAD // Cambridge Blue
-           * #65532F // Donkey Brown
-           * #312509 // Zinnwaldite Brown
-           * #585563 // Davy's Grey
-           * #5B2E48 // Wine Dregs  
+        {/* Colour choices:
            * https://coolors.co/
         */}
         return (
@@ -205,14 +173,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000',
     },
 });
-
-{/*
-
-    * Ongoing issue:
-    *
-    * The app loads, enter name, select colour, enter chat successful, 
-    * L134 message appears briefly, then the Firebase messages load,
-    * Unable to type, the keyboard appears and disappears immediately,
-    * Still looking for fix.
-
-*/}
