@@ -42,37 +42,27 @@ export default class Chat extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.state.params.name
-        }
-    }
+        };
+    };
 
     // Display elements
     componentDidMount() {
         NetInfo.fetch().then(isConnected => {
             if (isConnected) {
-                this.setState({
-                    isConnected: true,
-                });
                 this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
                     if (!user) {
                         await firebase.auth().signInAnonymously();
                     }
-                });
-                this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
-
-                // Set state with a static message
-                this.setState({
-                    user: {
-                        _id: this.user._id,
-                        name: this.props.navigation.state.params.name,
-                    },
-                    messages: [
-                        {
-                            _id: 2,
-                            text: this.props.navigation.state.params.name + ' has entered the chat',
-                            createdAt: new Date(),
-                            system: true,
+                    this.setState({
+                        user: {
+                            _id: this.user._id,
+                            name: this.props.navigation.state.params.name,
+                            loggedInText: this.props.navigation.state.params.name + ' has entered the chat',
+                            isConnected: true,
                         },
-                    ],
+                        messages: [],
+                    });
+                    this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
                 });
             } else {
                 this.setState({
@@ -99,21 +89,36 @@ export default class Chat extends Component {
         this.setState({
             messages
         });
-        console.log(messages);
+        //console.log(messages);
     };
 
     // Add message
     addMessage() {
+        const message = this.state.messages[0];
         this.referenceMessages.add({
-            _id: this.state.messages[0]._id,
-            text: this.state.messages[0].text || '',
-            createdAt: this.state.messages[0].createdAt,
-            user: this.state.user,
+            _id: message._id,
+            text: message.text || '',
+            createdAt: message.createdAt,
+            user: message.user,
+            //user id ? : use uuid
         });
         console.log(this.state.user);
     };
 
-    // Save messages
+    // Get messages from local(async) storage
+    async getMessages() {
+        let messages = '';
+        try {
+            messages = await AsyncStorage.getItem('messages') || [];
+            this.setState({
+                messages: JSON.parse(messages)
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
+    // Save messages locally(asyncStorage)
     async saveMessages() {
         try {
             await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
@@ -122,7 +127,7 @@ export default class Chat extends Component {
         }
     };
 
-    // Delete messages
+    // Delete messages locally(asyncStorage)
     async deleteMessages() {
         try {
             await AsyncStorage.removeItem('messages');
@@ -141,19 +146,6 @@ export default class Chat extends Component {
         });
     };
 
-    // Get messages
-    async getMessages() {
-        let messages = '';
-        try {
-            messages = await AsyncStorage.getItem('messages') || [];
-            this.setState({
-                messages: JSON.parse(messages)
-            });
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
     componentWillUnmount() {
         // Stop listening for authentication
         this.authUnsubscribe();
@@ -163,15 +155,22 @@ export default class Chat extends Component {
 
     // Hide inputbar when offline
     renderInputToolbar(props) {
-        if (this.state.isConnected == false) {
-        } else {
+        if (this.state.isConnected) {
             return (
                 <InputToolbar
                     {...props}
                 />
             );
         }
-    };
+        {/*
+            * 
+            * Idealy, to implement:
+            * when the user is this.state.!isConnected,
+            * the inputToolbar renders the keyboard, 
+            * but the message is saved in this.saveMessages(); 
+            * 
+        */}
+    }
 
     // Change bubble color
     renderBubble(props) {
@@ -195,11 +194,16 @@ export default class Chat extends Component {
 
     render() {
         return (
-            <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.color }]}>
+            <View style={[
+                styles.container, {
+                    backgroundColor: this.props.navigation.state.params.color
+                }
+            ]}>
                 <GiftedChat
                     messages={this.state.messages}
                     onSend={messages => this.onSend(messages)}
                     renderBubble={this.renderBubble.bind(this)}
+                    renderInputToolbar={this.renderInputToolbar.bind(this)}
                     user={this.state.user}
                 />
                 {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
