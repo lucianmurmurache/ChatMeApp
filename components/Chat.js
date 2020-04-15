@@ -59,9 +59,11 @@ export default class Chat extends Component {
                             name: this.props.navigation.state.params.name,
                             loggedInText: this.props.navigation.state.params.name + ' has entered the chat',
                             isConnected: true,
+
                         },
                         messages: [],
                     });
+                    console.log(user);
                     this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
                 });
             } else {
