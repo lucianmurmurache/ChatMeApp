@@ -55,11 +55,10 @@ export default class Chat extends Component {
                     }
                     this.setState({
                         user: {
-                            _id: this.user._id,
+                            _id: user.id,
                             name: this.props.navigation.state.params.name,
                             loggedInText: this.props.navigation.state.params.name + ' has entered the chat',
                             isConnected: true,
-
                         },
                         messages: [],
                     });
@@ -102,9 +101,8 @@ export default class Chat extends Component {
             text: message.text || '',
             createdAt: message.createdAt,
             user: message.user,
-            //user id ? : use uuid
         });
-        console.log(this.state.user);
+        //console.log(this.state.user);
     };
 
     // Get messages from local(async) storage
@@ -164,17 +162,9 @@ export default class Chat extends Component {
                 />
             );
         }
-        {/*
-            * 
-            * Idealy, to implement:
-            * when the user is this.state.!isConnected,
-            * the inputToolbar renders the keyboard, 
-            * but the message is saved in this.saveMessages(); 
-            * 
-        */}
     }
 
-    // Change bubble color
+    // Change message bubble color
     renderBubble(props) {
         {/* Colour choices:
            * https://coolors.co/
@@ -216,7 +206,7 @@ export default class Chat extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, // Sets the width and height of the device
+        flex: 1,
         color: '#FFFFFF',
         backgroundColor: '#000000',
     },
