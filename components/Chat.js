@@ -196,11 +196,17 @@ export default class Chat extends Component {
                 { backgroundColor: this.props.navigation.state.params.color },
             ]}>
                 <GiftedChat
+                    scrollToBottom
+                    showUserAvatar={true}
+                    user={this.state.user}
                     messages={this.state.messages}
+                    renderUsernameOnMessage={true}
+                    showAvatarForEveryMessage={true}
+                    renderActions={this.renderCustomActions}
                     onSend={messages => this.onSend(messages)}
                     renderBubble={this.renderBubble.bind(this)}
                     renderInputToolbar={this.renderInputToolbar.bind(this)}
-                    user={this.state.user}
+                    timeTextStyle={{ left: { color: '#F5F5F5' }, right: { color: '#F5F5F5' } }}
                 />
                 {/* {Platform.OS === 'android' ? <KeyboardSpacer /> : null} */}
             </View>
