@@ -17,7 +17,6 @@ export default class Chat extends Component {
             user: {
                 _id: '',
                 name: '',
-                avatar: '',
             },
             isConnected: false,
         };
@@ -33,7 +32,7 @@ export default class Chat extends Component {
                 messagingSenderId: '866722767157',
                 appId: '1:866722767157:web:e0bd107d743ce1fc11ac7c',
                 measurementId: 'G-SYTPBJSG2D'
-            })
+            });
         }
         this.referenceMessages = firebase.firestore().collection('messages');
     }
@@ -47,22 +46,28 @@ export default class Chat extends Component {
 
     // Display elements
     componentDidMount() {
-        NetInfo.fetch().then(isConnected => {
-            if (isConnected) {
+        NetInfo.fetch().then(state => {
+            //console.log('Connection type', state.type);
+            if (state.isConnected) {
+                //console.log('Is connected?', state.isConnected);
                 this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
                     if (!user) {
-                        await firebase.auth().signInAnonymously();
+                        try {
+                            await firebase.auth().signInAnonymously();
+                        } catch (error) {
+                            console.log('Unable to sign in: ' + error.message);
+                        }
                     }
                     this.setState({
+                        isConnected: true,
                         user: {
-                            _id: user.id,
+                            _id: user.uid,
                             name: this.props.navigation.state.params.name,
-                            loggedInText: this.props.navigation.state.params.name + ' has entered the chat',
-                            isConnected: true,
                         },
+                        loggedInText: this.props.navigation.state.params.name + ' has entered the chat',
                         messages: [],
                     });
-                    console.log(user);
+                    //console.log(user);
                     this.unsubscribe = this.referenceMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
                 });
             } else {
@@ -72,6 +77,13 @@ export default class Chat extends Component {
                 this.getMessages();
             }
         });
+    };
+
+    componentWillUnmount() {
+        // Stop listening for authentication
+        this.authUnsubscribe();
+        // Stop listening for changes
+        this.unsubscribe();
     };
 
     onCollectionUpdate = (querySnapshot) => {
@@ -90,7 +102,6 @@ export default class Chat extends Component {
         this.setState({
             messages
         });
-        //console.log(messages);
     };
 
     // Add message
@@ -100,14 +111,13 @@ export default class Chat extends Component {
             _id: message._id,
             text: message.text || '',
             createdAt: message.createdAt,
-            user: message.user,
+            user: this.state.user,
         });
-        //console.log(this.state.user);
     };
 
     // Get messages from local(async) storage
     async getMessages() {
-        let messages = '';
+        let messages = [];
         try {
             messages = await AsyncStorage.getItem('messages') || [];
             this.setState({
@@ -139,18 +149,11 @@ export default class Chat extends Component {
     // Send message
     onSend = (messages = []) => {
         this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, messages),
+            messages: GiftedChat.append(previousState.messages, messages)
         }), () => {
             this.addMessage();
             this.saveMessages();
         });
-    };
-
-    componentWillUnmount() {
-        // Stop listening for authentication
-        this.authUnsubscribe();
-        // Stop listening for changes
-        this.unsubscribe();
     };
 
     // Hide inputbar when offline
@@ -162,7 +165,7 @@ export default class Chat extends Component {
                 />
             );
         }
-    }
+    };
 
     // Change message bubble color
     renderBubble(props) {
@@ -187,9 +190,8 @@ export default class Chat extends Component {
     render() {
         return (
             <View style={[
-                styles.container, {
-                    backgroundColor: this.props.navigation.state.params.color
-                }
+                styles.container,
+                { backgroundColor: this.props.navigation.state.params.color },
             ]}>
                 <GiftedChat
                     messages={this.state.messages}
@@ -198,7 +200,7 @@ export default class Chat extends Component {
                     renderInputToolbar={this.renderInputToolbar.bind(this)}
                     user={this.state.user}
                 />
-                {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
+                {/* {Platform.OS === 'android' ? <KeyboardSpacer /> : null} */}
             </View>
         );
     }
