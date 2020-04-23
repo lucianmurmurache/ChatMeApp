@@ -17,6 +17,7 @@ export default class Chat extends Component {
             user: {
                 _id: '',
                 name: '',
+                avatar: '',
             },
             isConnected: false,
         };
@@ -63,6 +64,7 @@ export default class Chat extends Component {
                         user: {
                             _id: user.uid,
                             name: this.props.navigation.state.params.name,
+                            avatar: 'https://placeimg.com/140/140/any',
                         },
                         loggedInText: this.props.navigation.state.params.name + ' has entered the chat',
                         messages: [],
