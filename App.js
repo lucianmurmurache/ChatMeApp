@@ -6,10 +6,15 @@ import Start from './components/Start';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
-//hide navigation bar on Start screen
+//Timer warning workaround - issue due to Firebase
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Setting a timer']);
+
+// Create Navigator
 const navigator = createStackNavigator({
   Start: {
     screen: Start, navigationOptions: {
+      //hide navigation bar on Start screen
       headerShown: false,
     },
   },

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Platform, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Platform, AsyncStorage, /*Dimensions*/ } from 'react-native';
 
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import NetInfo from '@react-native-community/netinfo';
+import CustomActions from './CustomActions';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import firebase from 'firebase';
 import 'firebase/firestore';
@@ -99,6 +101,8 @@ export default class Chat extends Component {
                 text: data.text || '',
                 createdAt: data.createdAt.toDate(),
                 user: data.user,
+                image: data.image || '',
+                location: data.location || null,
             });
         });
         this.setState({
@@ -114,6 +118,8 @@ export default class Chat extends Component {
             text: message.text || '',
             createdAt: message.createdAt,
             user: this.state.user,
+            image: message.image || '',
+            location: message.location || null,
         });
     };
 
@@ -189,6 +195,32 @@ export default class Chat extends Component {
         );
     };
 
+    renderCustomView(props) {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                    provider={PROVIDER_GOOGLE}
+                    style={styles.mapContainer}
+                    showsUserLocation={true}
+                    loadingEnabled={true}
+                    showsCompass={true}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.04,
+                        longitudeDelta: 0.05,
+                    }}
+                />
+            );
+        }
+        return null;
+    }
+
+    renderCustomActions = (props) => {
+        return <CustomActions {...props} />;
+    };
+
     render() {
         return (
             <View style={[
@@ -202,11 +234,12 @@ export default class Chat extends Component {
                     messages={this.state.messages}
                     renderUsernameOnMessage={true}
                     showAvatarForEveryMessage={true}
+                    renderCustomView={this.renderCustomView}
                     renderActions={this.renderCustomActions}
                     onSend={messages => this.onSend(messages)}
                     renderBubble={this.renderBubble.bind(this)}
                     renderInputToolbar={this.renderInputToolbar.bind(this)}
-                    timeTextStyle={{ left: { color: '#F5F5F5' }, right: { color: '#F5F5F5' } }}
+                    timeTextStyle={{ left: { color: '#FFF' }, right: { color: '#FFF' } }}
                 />
                 {/* {Platform.OS === 'android' ? <KeyboardSpacer /> : null} */}
             </View>
@@ -219,5 +252,13 @@ const styles = StyleSheet.create({
         flex: 1,
         color: '#FFFFFF',
         backgroundColor: '#000000',
+    },
+    mapContainer: {
+        width: 250,
+        height: 200,
+        borderRadius: 13,
+        margin: 1,
+        //width: Dimensions.get('window').width,
+        //height: Dimensions.get('window').height,
     },
 });
