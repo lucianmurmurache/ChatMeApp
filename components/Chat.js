@@ -23,7 +23,7 @@ export default class Chat extends Component {
             },
             isConnected: false,
             image: null,
-            location: null,
+
         };
 
         // Firebase init
@@ -198,33 +198,40 @@ export default class Chat extends Component {
         );
     };
 
+    // Custom view display when the message contains location
     renderCustomView(props) {
         const { currentMessage } = props;
-        if (currentMessage.location) {
+        //console.log(`currentMessage data:  ${JSON.stringify(currentMessage)}`);
+        if (currentMessage?.location?.latitude && currentMessage?.location?.longitude) {
+            //console.log('lat: ' + currentMessage.location.latitude, 'lon: ' + currentMessage.location.longitude);
             return (
-                <View >
-                    <MapView
-                        style={styles.mapContainer}
-                        provider={PROVIDER_GOOGLE}
-                        showsUserLocation={true}
-                        loadingEnabled={true}
-                        showsCompass={true}
-                        region={{
+                <MapView
+                    style={styles.mapContainer}
+                    provider={PROVIDER_GOOGLE}
+                    showsUserLocation={true}
+                    loadingEnabled={true}
+                    showsCompass={true}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.04,
+                        longitudeDelta: 0.05,
+                    }}
+                >
+                    <MapView.Marker
+                        coordinate={{
                             latitude: currentMessage.location.latitude,
                             longitude: currentMessage.location.longitude,
-                            latitudeDelta: 0.04,
-                            longitudeDelta: 0.05,
                         }}
                     />
-                </View>
+                </MapView>
             );
         }
         return null;
     }
 
-    renderCustomActions = (props) => {
-        return <CustomActions {...props} />;
-    };
+    // Render custom actions in inputToolbar
+    renderCustomActions = (props) => <CustomActions {...props} />;
 
     render() {
         return (

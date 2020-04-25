@@ -94,7 +94,7 @@ export default class CustomActions extends React.Component {
             if (status === 'granted') {
                 const location = await Location.getCurrentPositionAsync({})
                     .catch(error => console.log(error));
-
+                //console.log(location);
                 if (location) {
                     this.props.onSend({
                         location: {
