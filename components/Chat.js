@@ -22,6 +22,8 @@ export default class Chat extends Component {
                 avatar: '',
             },
             isConnected: false,
+            image: null,
+            location: null,
         };
 
         // Firebase init
@@ -68,7 +70,6 @@ export default class Chat extends Component {
                             name: this.props.navigation.state.params.name,
                             avatar: 'https://placeimg.com/140/140/any',
                         },
-                        loggedInText: this.props.navigation.state.params.name + ' has entered the chat',
                         messages: [],
                     });
                     //console.log(user);
@@ -83,13 +84,13 @@ export default class Chat extends Component {
         });
     };
 
+    // Stop listening for authentication and changes
     componentWillUnmount() {
-        // Stop listening for authentication
         this.authUnsubscribe();
-        // Stop listening for changes
         this.unsubscribe();
     };
 
+    // Update the message state with input data 
     onCollectionUpdate = (querySnapshot) => {
         const messages = [];
         // Go through each document
@@ -103,6 +104,7 @@ export default class Chat extends Component {
                 user: data.user,
                 image: data.image || '',
                 location: data.location || null,
+                sent: true,
             });
         });
         this.setState({
@@ -120,6 +122,7 @@ export default class Chat extends Component {
             user: this.state.user,
             image: message.image || '',
             location: message.location || null,
+            sent: true,
         });
     };
 
@@ -199,19 +202,21 @@ export default class Chat extends Component {
         const { currentMessage } = props;
         if (currentMessage.location) {
             return (
-                <MapView
-                    provider={PROVIDER_GOOGLE}
-                    style={styles.mapContainer}
-                    showsUserLocation={true}
-                    loadingEnabled={true}
-                    showsCompass={true}
-                    region={{
-                        latitude: currentMessage.location.latitude,
-                        longitude: currentMessage.location.longitude,
-                        latitudeDelta: 0.04,
-                        longitudeDelta: 0.05,
-                    }}
-                />
+                <View >
+                    <MapView
+                        style={styles.mapContainer}
+                        provider={PROVIDER_GOOGLE}
+                        showsUserLocation={true}
+                        loadingEnabled={true}
+                        showsCompass={true}
+                        region={{
+                            latitude: currentMessage.location.latitude,
+                            longitude: currentMessage.location.longitude,
+                            latitudeDelta: 0.04,
+                            longitudeDelta: 0.05,
+                        }}
+                    />
+                </View>
             );
         }
         return null;
@@ -229,6 +234,7 @@ export default class Chat extends Component {
             ]}>
                 <GiftedChat
                     scrollToBottom
+                    renderAvatarOnTop
                     showUserAvatar={true}
                     user={this.state.user}
                     messages={this.state.messages}
@@ -241,7 +247,7 @@ export default class Chat extends Component {
                     renderInputToolbar={this.renderInputToolbar.bind(this)}
                     timeTextStyle={{ left: { color: '#FFF' }, right: { color: '#FFF' } }}
                 />
-                {/* {Platform.OS === 'android' ? <KeyboardSpacer /> : null} */}
+                {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
             </View>
         );
     }
