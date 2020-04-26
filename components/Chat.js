@@ -1,16 +1,33 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Platform, AsyncStorage, /*Dimensions*/ } from 'react-native';
+/*
+    Table of contents:
+     1. Firebase init
+     2. Set navigation title as username
+     3. Display elements
+     4. Stop listening for authentication and changes
+     5. Update the message state with input data
+     6. Add message
+     7. Get messages from local(async) storage
+     8. Save messages locally(asyncStorage)
+     9. Delete messages locally(asyncStorage)
+    10. Send message and save locally
+    11. Hide inputToolbar when offline
+    12. Set message bubble colour
+    13. Custom view display when the message contains location
+    14. Render custom actions in inputToolbar
+*/
 
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
-import NetInfo from '@react-native-community/netinfo';
-import CustomActions from './CustomActions';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-
-import firebase from 'firebase';
+import React from 'react';
 import 'firebase/firestore';
+import firebase from 'firebase';
+import CustomActions from './CustomActions';
+import NetInfo from '@react-native-community/netinfo';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { View, StyleSheet, Platform, AsyncStorage } from 'react-native';
+import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 
-export default class Chat extends Component {
+
+export default class Chat extends React.Component {
     constructor() {
         super();
 
@@ -23,10 +40,9 @@ export default class Chat extends Component {
             },
             isConnected: false,
             image: null,
-
         };
 
-        // Firebase init
+        // 1. Firebase init
         if (!firebase.apps.length) {
             firebase.initializeApp({
                 apiKey: 'AIzaSyBq-QCkcxewGL-E4bI6dFqeJ70qEqc9hxM',
@@ -40,16 +56,16 @@ export default class Chat extends Component {
             });
         }
         this.referenceMessages = firebase.firestore().collection('messages');
-    }
+    };
 
-    // Set navigation title as username
+    // 2. Set navigation title as username
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.state.params.name
         };
     };
 
-    // Display elements
+    // 3. Display elements
     componentDidMount() {
         NetInfo.fetch().then(state => {
             //console.log('Connection type', state.type);
@@ -60,7 +76,7 @@ export default class Chat extends Component {
                         try {
                             await firebase.auth().signInAnonymously();
                         } catch (error) {
-                            console.log('Unable to sign in: ' + error.message);
+                            console.log(`Unable to sign in: ${error.message}`);
                         }
                     }
                     this.setState({
@@ -84,13 +100,13 @@ export default class Chat extends Component {
         });
     };
 
-    // Stop listening for authentication and changes
+    // 4. Stop listening for authentication and changes
     componentWillUnmount() {
         this.authUnsubscribe();
         this.unsubscribe();
     };
 
-    // Update the message state with input data 
+    // 5. Update the message state with input data 
     onCollectionUpdate = (querySnapshot) => {
         const messages = [];
         // Go through each document
@@ -112,7 +128,7 @@ export default class Chat extends Component {
         });
     };
 
-    // Add message
+    // 6. Add message
     addMessage() {
         const message = this.state.messages[0];
         this.referenceMessages.add({
@@ -126,7 +142,7 @@ export default class Chat extends Component {
         });
     };
 
-    // Get messages from local(async) storage
+    // 7. Get messages from local(async) storage
     async getMessages() {
         let messages = [];
         try {
@@ -135,29 +151,29 @@ export default class Chat extends Component {
                 messages: JSON.parse(messages)
             });
         } catch (error) {
-            console.log(error.message);
+            console.log(`Unable to get messages: ${error.message}`);
         }
     };
 
-    // Save messages locally(asyncStorage)
+    // 8. Save messages locally(asyncStorage)
     async saveMessages() {
         try {
             await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
         } catch (error) {
-            console.log(error.message);
+            console.log(`Unable to save messages: ${error.message}`);
         }
     };
 
-    // Delete messages locally(asyncStorage)
+    // 9. Delete messages locally(asyncStorage)
     async deleteMessages() {
         try {
             await AsyncStorage.removeItem('messages');
         } catch (error) {
-            console.log(error.message);
+            console.log(`Unable to delete messages: ${error.message}`);
         }
     };
 
-    // Send message
+    // 10. Send message and save locally
     onSend = (messages = []) => {
         this.setState(previousState => ({
             messages: GiftedChat.append(previousState.messages, messages)
@@ -167,7 +183,7 @@ export default class Chat extends Component {
         });
     };
 
-    // Hide inputbar when offline
+    // 11. Hide inputToolbar when offline
     renderInputToolbar(props) {
         if (this.state.isConnected) {
             return (
@@ -178,7 +194,7 @@ export default class Chat extends Component {
         }
     };
 
-    // Change message bubble color
+    // 12. Set message bubble colour
     renderBubble(props) {
         {/* Colour choices:
            * https://coolors.co/
@@ -198,39 +214,43 @@ export default class Chat extends Component {
         );
     };
 
-    // Custom view display when the message contains location
+    // 13. Custom view display when the message contains location
     renderCustomView(props) {
-        const { currentMessage } = props;
-        //console.log(`currentMessage data:  ${JSON.stringify(currentMessage)}`);
-        if (currentMessage?.location?.latitude && currentMessage?.location?.longitude) {
-            //console.log('lat: ' + currentMessage.location.latitude, 'lon: ' + currentMessage.location.longitude);
-            return (
-                <MapView
-                    style={styles.mapContainer}
-                    provider={PROVIDER_GOOGLE}
-                    showsUserLocation={true}
-                    loadingEnabled={true}
-                    showsCompass={true}
-                    region={{
-                        latitude: currentMessage.location.latitude,
-                        longitude: currentMessage.location.longitude,
-                        latitudeDelta: 0.04,
-                        longitudeDelta: 0.05,
-                    }}
-                >
-                    <MapView.Marker
-                        coordinate={{
+        try {
+            const { currentMessage } = props;
+            //console.log(`currentMessage data:  ${JSON.stringify(currentMessage)}`);
+            if (currentMessage?.location?.latitude && currentMessage?.location?.longitude) {
+                //console.log(`lat: ${currentMessage.location.latitude}, lon: ${currentMessage.location.longitude}`);
+                return (
+                    <MapView
+                        style={styles.mapContainer}
+                        provider={PROVIDER_GOOGLE}
+                        showsUserLocation={true}
+                        loadingEnabled={true}
+                        showsCompass={true}
+                        region={{
                             latitude: currentMessage.location.latitude,
                             longitude: currentMessage.location.longitude,
+                            latitudeDelta: 0.04,
+                            longitudeDelta: 0.05,
                         }}
-                    />
-                </MapView>
-            );
+                    >
+                        <MapView.Marker
+                            coordinate={{
+                                latitude: currentMessage.location.latitude,
+                                longitude: currentMessage.location.longitude,
+                            }}
+                        />
+                    </MapView>
+                );
+            }
+            return null;
+        } catch (error) {
+            console.log(`Unable to render mapView: ${error.message}`);
         }
-        return null;
-    }
+    };
 
-    // Render custom actions in inputToolbar
+    // 14. Render custom actions in inputToolbar
     renderCustomActions = (props) => <CustomActions {...props} />;
 
     render() {
