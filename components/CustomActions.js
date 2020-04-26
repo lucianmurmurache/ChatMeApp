@@ -1,6 +1,14 @@
+/*
+    Table of contents:
+    1. Select image from library 
+    2. Take photo with device camera 
+    3. Upload image as Blob(binary large object) to Firebase storage
+    4. Get user location 
+    5. Perform action according to the selected option
+*/
+
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import * as Location from 'expo-location';
@@ -14,8 +22,8 @@ export default class CustomActions extends React.Component {
         super()
     }
 
-    // Select image from library if permission granted
-    async pickImage() {
+    // 1.  Select image from library if permission granted
+    async selectImage() {
         try {
             const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
@@ -24,20 +32,20 @@ export default class CustomActions extends React.Component {
                     mediaTypes: ImagePicker.MediaTypeOptions.Images,
                     allowsEditing: true,
                     quality: 1,
-                }).catch(error => console.log(error));
+                });
 
                 if (!result.cancelled) {
                     const imageUrl = await this.uploadImage(result.uri);
                     this.props.onSend({ image: imageUrl });
                 }
-                console.log(result);
+                //console.log(result);
             }
         } catch (error) {
-            console.log(error.message);
+            console.log(`Upload Image error: ${error.message}`);
         }
     };
 
-    // Take photo with device camera if permission granted
+    // 2. Take photo with device camera if permission granted
     async takePhoto() {
         try {
             const { status } = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
@@ -45,7 +53,7 @@ export default class CustomActions extends React.Component {
             if (status === 'granted') {
                 let result = await ImagePicker.launchCameraAsync({
                     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                }).catch(error => console.log(error));
+                });
 
                 if (!result.cancelled) {
                     const imageUrlLink = await this.uploadImage(result.uri);
@@ -53,11 +61,11 @@ export default class CustomActions extends React.Component {
                 }
             }
         } catch (error) {
-            console.log(error.message);
+            console.log(`takePhoto error: ${error.message}`);
         }
     };
 
-    // Upload image as Blob(binary large object) to Firebase storage
+    // 3. Upload image as Blob(binary large object) to Firebase storage
     async uploadImage(uri) {
         try {
             const blob = await new Promise((resolve, reject) => {
@@ -76,24 +84,23 @@ export default class CustomActions extends React.Component {
             const getImageName = uri.split('/');
             const imageArrayLength = getImageName[getImageName.length - 1];
             const ref = firebase.storage().ref().child(`images/${imageArrayLength}`);
-            console.log(ref, getImageName[imageArrayLength]);
+            //console.log(`UploadImage: ${ref, getImageName[imageArrayLength]}`);
             const snapshot = await ref.put(blob);
             blob.close();
             const imageURL = await snapshot.ref.getDownloadURL();
             return imageURL;
         } catch (error) {
-            console.log(error.message);
+            console.log(`Uploading image error: ${error.message}`);
         }
     };
 
-    // Get user location if permission granted
+    // 4. Get user location if permission granted
     async getLocation() {
         try {
             const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
             if (status === 'granted') {
-                const location = await Location.getCurrentPositionAsync({})
-                    .catch(error => console.log(error));
+                const location = await Location.getCurrentPositionAsync({});
                 //console.log(location);
                 if (location) {
                     this.props.onSend({
@@ -105,10 +112,11 @@ export default class CustomActions extends React.Component {
                 }
             }
         } catch (error) {
-            console.log(error.message);
+            console.log(`getLocation error: ${error.message}`);
         }
     };
 
+    // 5. Perform action according to the selected option
     onActionPress = () => {
         const options = ['Select Image from Library', 'Take a Photo', 'Share Location', 'Cancel'];
         const cancelButtonIndex = options.length - 1;
@@ -120,8 +128,8 @@ export default class CustomActions extends React.Component {
             async (buttonIndex) => {
                 switch (buttonIndex) {
                     case 0:
-                        //console.log('pick image from library');
-                        return this.pickImage();
+                        //console.log('select image from library');
+                        return this.selectImage();
                     case 1:
                         //console.log('take photo');
                         return this.takePhoto();
@@ -140,7 +148,7 @@ export default class CustomActions extends React.Component {
                 accessible={true}
                 accessibilityLabel='Tap for action options!'
                 accessibilityHint='The action options allow you to select an image from the library, 
-                                   take a photo using the device camera or share your device location'
+                                   take a photo using the device camera or share your device location.'
                 style={[styles.container]}
                 onPress={this.onActionPress}
             >
@@ -160,17 +168,17 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     wrapper: {
+        flex: 1,
+        borderWidth: 2,
         borderRadius: 13,
         borderColor: '#b2b2b2',
-        borderWidth: 2,
-        flex: 1,
     },
     iconText: {
+        fontSize: 16,
         color: '#b2b2b2',
         fontWeight: 'bold',
-        fontSize: 16,
-        backgroundColor: 'transparent',
         textAlign: 'center',
+        backgroundColor: 'transparent',
     },
 });
 
