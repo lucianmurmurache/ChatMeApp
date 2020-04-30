@@ -216,38 +216,34 @@ export default class Chat extends React.Component {
 
     // 13. Custom view display when the message contains location
     renderCustomView(props) {
-        try {
-            const { currentMessage } = props;
-            //console.log(`currentMessage data:  ${JSON.stringify(currentMessage)}`);
-            if (currentMessage?.location?.latitude && currentMessage?.location?.longitude) {
-                //console.log(`lat: ${currentMessage.location.latitude}, lon: ${currentMessage.location.longitude}`);
-                return (
-                    <MapView
-                        style={styles.mapContainer}
-                        provider={PROVIDER_GOOGLE}
-                        showsUserLocation={true}
-                        loadingEnabled={true}
-                        showsCompass={true}
-                        region={{
+        const { currentMessage } = props;
+        //console.log(`currentMessage data:  ${JSON.stringify(currentMessage)}`);
+        if (currentMessage?.location?.latitude && currentMessage?.location?.longitude) {
+            //console.log(`lat: ${currentMessage.location.latitude}, lon: ${currentMessage.location.longitude}`);
+            return (
+                <MapView
+                    style={styles.mapContainer}
+                    provider={PROVIDER_GOOGLE}
+                    showsUserLocation={true}
+                    loadingEnabled={true}
+                    showsCompass={true}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.04,
+                        longitudeDelta: 0.05,
+                    }}
+                >
+                    <MapView.Marker
+                        coordinate={{
                             latitude: currentMessage.location.latitude,
                             longitude: currentMessage.location.longitude,
-                            latitudeDelta: 0.04,
-                            longitudeDelta: 0.05,
                         }}
-                    >
-                        <MapView.Marker
-                            coordinate={{
-                                latitude: currentMessage.location.latitude,
-                                longitude: currentMessage.location.longitude,
-                            }}
-                        />
-                    </MapView>
-                );
-            }
-            return null;
-        } catch (error) {
-            console.log(`Unable to render mapView: ${error.message}`);
+                    />
+                </MapView>
+            );
         }
+        return null;
     };
 
     // 14. Render custom actions in inputToolbar
