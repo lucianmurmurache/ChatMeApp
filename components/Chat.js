@@ -45,14 +45,17 @@ export default class Chat extends React.Component {
         // 1. Firebase init
         if (!firebase.apps.length) {
             firebase.initializeApp({
-                apiKey: 'AIzaSyBq-QCkcxewGL-E4bI6dFqeJ70qEqc9hxM',
-                authDomain: 'chatmeapp-a125c.firebaseapp.com',
-                databaseURL: 'https://chatmeapp-a125c.firebaseio.com',
-                projectId: 'chatmeapp-a125c',
-                storageBucket: 'chatmeapp-a125c.appspot.com',
-                messagingSenderId: '866722767157',
-                appId: '1:866722767157:web:e0bd107d743ce1fc11ac7c',
-                measurementId: 'G-SYTPBJSG2D'
+                /*
+                    Enter the following data from Firebase:
+                    apiKey: '',
+                    authDomain: '',
+                    databaseURL: '',
+                    projectId: '',
+                    storageBucket: '',
+                    messagingSenderId: ,
+                    appId: '',
+                    measurementId: '' 
+                */
             });
         }
         this.referenceMessages = firebase.firestore().collection('messages');
