@@ -78,3 +78,12 @@
  * The app must authenticate users anonymously via _Google Firebase authentication_.
  * The chat interface and functionality must be created using the _Gifted Chat library_.
  * The app must let users take pictures with the device’s camera app, and send them.
+
+### Kanban board
+
+[ChatMeApp-Kanban-board](https://trello.com/b/V7NtcA89/chatapp)
+
+### Images
+
+<img src="images/image1.jpg" alt="Start page" width="622px">
+<img src="images/image2.jpg" alt="Chat page" width="622px">
