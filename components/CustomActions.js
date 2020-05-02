@@ -86,6 +86,7 @@ export default class CustomActions extends React.Component {
     // 3. Upload image as Blob(binary large object) to Firebase storage
 
     /**
+     * Upload image as Blob to Firebase
      * @async
      * @function uploadImage
      * @param {*} uri 
@@ -122,6 +123,8 @@ export default class CustomActions extends React.Component {
     // 4. Get user location if permission granted
 
     /**
+     * Requires permission to access @LOCATION
+     * If permission is granted, it shares the device location
      * @async
      * @function getLocation
      * @returns {Promise <number>}
@@ -150,6 +153,7 @@ export default class CustomActions extends React.Component {
     // 5. Perform action according to the selected option
 
     /**
+     * Perform the selected action
      * @function onActionPress
      * @returns {actionSheet} @showActionSheetWithOptions Select Image from Library, Take a Photo, Share Location and Cancel
      */

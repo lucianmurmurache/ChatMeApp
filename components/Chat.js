@@ -47,16 +47,16 @@ export default class Chat extends React.Component {
         if (!firebase.apps.length) {
             firebase.initializeApp({
                 /*
-                    Enter the following data from Firebase:
-                    apiKey: '',
-                    authDomain: '',
-                    databaseURL: '',
-                    projectId: '',
-                    storageBucket: '',
-                    messagingSenderId: ,
-                    appId: '',
-                    measurementId: '' 
-                */
+                   Enter the following data from Firebase:
+                   apiKey: '',
+                   authDomain: '',
+                   databaseURL: '',
+                   projectId: '',
+                   storageBucket: '',
+                   messagingSenderId: ,
+                   appId: '',
+                   measurementId: '' 
+               */
             });
         }
         this.referenceMessages = firebase.firestore().collection('messages');
@@ -113,6 +113,7 @@ export default class Chat extends React.Component {
     // 5. Update the message state with input data 
 
     /**
+     * Update the message state with the most recent data 
      * @function onCollectionUpdate
      * @param {string} _id - message id
      * @param {string} text - message content
@@ -147,6 +148,7 @@ export default class Chat extends React.Component {
     // 6. Add message
 
     /**
+     * Add message
      * @function addMessage
      * @param {string} _id - message id
      * @param {string} text - message content
@@ -194,6 +196,7 @@ export default class Chat extends React.Component {
     // 8. Save messages locally(asyncStorage)
 
     /**
+     * Save messages in local storage
      * @async
      * @function saveMessages
      * @returns {AsyncStorage} - setItem
