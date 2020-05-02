@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+    <div id="main">
+
+        <h1 class="page-title">ChatMeApp</h1>
+        <!--Summary-->
+        <h2> Summary </h2>
+        <ul>
+            <li>
+                <p>
+                    A chat application using <i>React Native</i> and
+                    <a href="https://github.com/FaridSafi/react-native-gifted-chat" target="_blank">
+                        Gifted Chat.
+                    </a>
+                </p>
+            </li>
+            <li>
+                <p>
+                    Using <a href="https://expo.io/tools" target="_blank">Expo-cli</a> to set up the project.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Use <i>Android</i> emulators and <i>iOS</i> simulators to see how the app looks and behaves in
+                    different environments.
+                </p>
+            </li>
+        </ul>
+        <!--Summary-->
+
+        <!--Key Features-->
+        <h2> Key Features </h2>
+        <ul>
+            <li>
+                <p>
+                    Data gets stored online and offline.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    A page displaying the conversation, as well as an input field and submit button.
+                </p>
+            </li>
+
+            <li>
+                <p>The chat must provide users with two additional communication features: sending images and location
+                    data.
+                </p>
+            </li>
+
+            <li>
+                <p>A page where users can enter their name and choose a background color for the chat screen before
+                    joining the chat.
+                </p>
+            </li>
+        </ul>
+        <!--Key Features-->
+
+        <!--Installation instructions-->
+        <h2>Installation instructions </h2>
+        <ul>
+            <li>
+                <p>
+                    To run the app, you must first install <a href="https://expo.io/tools" target="_blank">Expo-cli</a>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Once <i>Expo</i> is installed, navigate to the root directory and run <b>npm install</b> .
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Next, you can start the app by running <b>expo start</b>. This will launch DevTools on
+                    <b>port 19002</b>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    You can either scan the barcode using a mobile device (expo app required: <a
+                        href="https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en"
+                        target="_blank">Android</a> or <a href="https://apps.apple.com/de/app/expo-client/id982107779"
+                        target="_blank">iOS</a>) or use a <a
+                        href="https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/iOS_Simulator_Guide/GettingStartedwithiOSSimulator/GettingStartedwithiOSSimulator.html"
+                        target="_blank">simulator</a> or <a href="https://developer.android.com/studio/run/emulator"
+                        target="_blank">emulator</a>.
+                </p>
+            </li>
+        </ul>
+        <!--Installation instructions-->
+
+        <!--Required Dependencies-->
+        <h2>Required Dependencies</h2>
+
+        <ul>
+            <li>
+                <p>
+                    To install all dependencies, you can simply run <b>npm install</b> from the root directory.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Used dependencies: <br />
+                    <i> expo</i>,
+                    <i>react</i>,
+                    <i>firebase</i>,
+                    <i>react-dom</i>,
+                    <i>react-native</i>,
+                    <i>expo-location</i>,
+                    <i>react-navigation</i>,
+                    <i>react-native-web</i>,
+                    <i>expo-permissions</i>,
+                    <i>react-native-maps</i>,
+                    <i>expo-image-picker</i>,
+                    <i>react-native-screens</i>,
+                    <i>react-navigation-stack</i>,
+                    <i>react-native-reanimated</i>,
+                    <i>react-native-gifted-chat</i>,
+                    <i>react-native-gesture-handler</i>,
+                    <i>react-native-keyboard-spacer</i>,
+                    <i>react-native-safe-area-context</i>,
+                    <i>@react-native-community/netinfo</i>,
+                    <i>@react-native-community/masked-view</i>.
+                </p>
+            </li>
+        </ul>
+        <!--Required Dependencies-->
+
+        <!--Setting up the database-->
+
+        <h2>Setting up the database </h2>
+
+        <ol>
+            <li>
+                <p>
+                    Head to <a href="https://firebase.google.com/" target="_blank">Firebase</a> and click on <i>Sign
+                        in</i> in the upper-right corner.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Next, click on the <i>Go to console</i> link, which is also in the top-right corner of the window,
+                    and
+                    choose <i>Add project</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Give your project a name, With the default settings selected, agree to the terms and click
+                    <i>Create Project</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Create a database by clicking on <i>Develop</i> from the menu and, from the additional menu that
+                    appears, select <i>Database</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Next, choose <i>Create database</i> in the <i>Cloud Firestore</i> section.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    It is important that you make sure you are creating a <i>Firestore Database</i> and <b>not</b> a
+                    <i>Realtime Database</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Before you can start adding data into it, you first need to set up some security rules for your
+                    database.
+                </p>
+            </li>
+        </ol>
+
+        <!--Setting up the database-->
+
+        <!--Design Specifications-->
+
+        <h2>Design Specifications</h2>
+
+        <ul>
+            <li>
+                <p>
+                    Vertical and horizontal spacing evenly distributed.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    App title: font size 45, font weight 600, font color #FFFFFF
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Color options HEX codes: #090C08; #474056; #8A95A5; #B9C6AE.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    “Your name”: font size 16, font weight 300, font color #757083, 50% opacity.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    “Choose background color”: font size 16, font weight 300, font color #757083, 100% opacity.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Start chatting button: font size 16, font weight 600, font color #FFFFFF, button color#757083.
+                </p>
+            </li>
+        </ul>
+        <!--Design Specifications-->
+
+        <!--Technical Requirements-->
+
+        <h2>Technical Requirements</h2>
+
+        <ul>
+            <li>
+                <p>
+                    The app must be written in <i>React Native</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    The app must be developed using <i>Expo-cli</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Chat conversations must be stored locally.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    The app must store images in <i>Firebase Cloud Storage</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    The app must be able to read the user’s location data.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Location data must be sent via the chat in a map view.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    The app must be styled according to specific screen design.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    Chat conversations must be stored in <i>Google Firestore Database</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    The app must let users pick and send images from the phone’s image library.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    All React Native code must be valid and linted according to given requirements.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    The app must authenticate users anonymously via <i>Google Firebase authentication</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    The chat interface and functionality must be created using the <i>Gifted Chat library</i>.
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    The app must let users take pictures with the device’s camera app, and send them.
+                </p>
+            </li>
+
+        </ul>
+
+        <!--Technical Requirements-->
+    </div>
+
+    <nav>
+        <h3><a href="global.html">Global</a></h3>
+        <ul>
+            <li><a href="global.html#addMessage">addMessage</a></li>
+            <li><a href="global.html#deleteMessages">deleteMessages</a></li>
+            <li><a href="global.html#getLocation">getLocation</a></li>
+            <li><a href="global.html#getMessages">getMessages</a></li>
+            <li><a href="global.html#onActionPress">onActionPress</a></li>
+            <li><a href="global.html#onCollectionUpdate">onCollectionUpdate</a></li>
+            <li><a href="global.html#onSend">onSend</a></li>
+            <li><a href="global.html#renderBubble">renderBubble</a></li>
+            <li><a href="global.html#renderCustomActions">renderCustomActions</a></li>
+            <li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li>
+            <li><a href="global.html#saveMessages">saveMessages</a></li>
+            <li><a href="global.html#selectImage">selectImage</a></li>
+            <li><a href="global.html#takePhoto">takePhoto</a></li>
+            <li><a href="global.html#uploadImage">uploadImage</a></li>
+        </ul>
+    </nav>
+
+    <br class="clear">
+    <br class="clear">
+
+    <footer>
+        <p>
+            Documentation generated by
+            <a href="https://github.com/lucianmurmurache" target="_blank"> Lucian Murmurache </a>
+            using <a href="https://github.com/jsdoc/jsdoc" target="_blank"> JSDoc </a> on the 2nd of May 2020
+        </p>
+    </footer>
+
+    <script> prettyPrint(); </script>
+    <script src="scripts/linenumber.js"> </script>
+</body>
+
+</html>

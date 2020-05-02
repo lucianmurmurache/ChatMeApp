@@ -85,7 +85,7 @@ export default class Start extends React.Component {
                             </Text>
                         </View>
                     </TouchableNativeFeedback>
-                    {Platform.OS === 'android' ? <KeyboardSpacer /> : null}{/*Not working-looking for different solution*/}
+                    {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
                 </View>
             </ImageBackground >
         );
