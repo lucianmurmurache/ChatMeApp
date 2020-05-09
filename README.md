@@ -85,5 +85,6 @@
 
 ### Images
 
-<img src="images/image1.jpg" alt="Start page" width="622px">
-<img src="images/image2.jpg" alt="Chat page" width="622px">
+<img src="images/image1.jpg" alt="Start page" width="311px">
+
+<img src="images/image2.jpg" alt="Chat page" width="311px">
